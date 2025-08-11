@@ -79,7 +79,8 @@ remove (id: string): void; - удаление товара из корзины
 
 ## Типы данных
 
-// интерфейс товара
+### интерфейс товара
+```
 interface IShopItem {
     id: string; //id товара
     description: string; //подробное описание товара
@@ -88,8 +89,9 @@ interface IShopItem {
     category: string; // категория товара
     price: string; // цена товара
 }
-
-// интерфейс заказа
+```
+### интерфейс заказа
+```
 interface IOrderForm {
     payment: 'online'| 'onDelivery'; //метод олплаты либо онлайн либо при получении
     deliveryAdress: string; // адрес доставки
@@ -97,7 +99,7 @@ interface IOrderForm {
     phone: string; // телефон
 
 }
-
+```
 ## Процессы
 
 Событийно-ориентированный подход
