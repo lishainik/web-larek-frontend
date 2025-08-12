@@ -1,8 +1,3 @@
-// export interface IBasketModel {
-//     items: Map<string, number>;
-//     add (id: string): void;
-//     remove (id: string): void;
-// }
 
 export interface IShopItem {
     id: string;
@@ -10,7 +5,7 @@ export interface IShopItem {
     image: string;
     title: string;
     category: string;
-    price: string;
+    price: number | null;
 }
 
 export interface IOrderForm {
