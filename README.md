@@ -58,16 +58,19 @@ yarn build
 ### Класс Catalog: IShopItem[] - массив товаров, полученный с сервера
 
 Методы класса:
-setItems(items: IShopItem[]):void; - сохрание массива товара в модели после получения из api
+
+setItems(items: IShopItem[]):void; - сохрание массива товара в модели после получения из api\
 getItem(id: string): IShopItem; - получение массива товаров каталога
 
 ### Класс BasketModel - массив товаров в корзине
+
 Поля класса - массив товаров с названиями и количеством товара в корзине
 
 Методы класса:
-add (id: string): void; - добавление товара в корзину
-remove (id: string): void; - удаление товара из корзины
-clearBasket(): void - очищает корзину
+
+add (id: string): void; - добавление товара в корзину\
+remove (id: string): void; - удаление товара из корзины\
+clearBasket(): void - очищает корзину\
  getTotal(): void - высчитывает стоимость товаров в корзине
 
 ### Класс OrderForm
@@ -75,11 +78,12 @@ clearBasket(): void - очищает корзину
 Отвечает за валидацию данных введенных в форму, хранение данных заказа
 
 Поля:
-payment: 'online'| 'onDelivery' - выбранный способ оплаты
-deliveryAdress: - адрес доставки
-mail: string - почта
-phone: string - телефон
-valid: boolean - определяет валидность поля
+
+payment: 'online'| 'onDelivery' - выбранный способ оплаты\
+deliveryAdress: - адрес доставки\
+mail: string - почта\
+phone: string - телефон\
+valid: boolean - определяет валидность поля\
 errors: string[] - массив текста для ошибок
 
 
@@ -91,9 +95,9 @@ errors: string[] - массив текста для ошибок
 
 Поля класса:
 
-_сounter: HTMLElement- счетчик товаров в корзине
-_catalog: HTMLElement - коллекция всех товаров на странице
-_wrapper: HTMLElement - "обертка" страницы
+_сounter: HTMLElement- счетчик товаров в корзине\
+_catalog: HTMLElement - коллекция всех товаров на странице\
+_wrapper: HTMLElement - "обертка" страницы\
 _basket: HTMLElement - кнопка корзины
 
 Методы класса:
@@ -106,9 +110,9 @@ _basket: HTMLElement - кнопка корзины
 
 Методы класса:
 
-setDisabled(element: HTMLElement, state: boolean) - отключение эелемента разметки
-_setText(element: HTMLElement, value: unknown) - изменение текстового содержания элемента
-toggleClass(element: HTMLElement, className: string, force?: boolean)
+setDisabled(element: HTMLElement, state: boolean) - отключение эелемента разметки\
+_setText(element: HTMLElement, value: unknown) - изменение текстового содержания элемента\
+toggleClass(element: HTMLElement, className: string, force?: boolean)\
 _setImage(element: HTMLImageElement, src: string, alt?: string) - добавление/удаление класса
 
 
@@ -122,8 +126,8 @@ HTML элемент кнопки закрытия окна и контейнер
 
 Методы класса:
 
-open() - открывает модальное окно
-close() - закрывает модальное окно
+open() - открывает модальное окно\
+close() - закрывает модальное окно\
 render(data: IModalData): HTMLElement - вовзращает корневой элемент при изменении
 
 ### Класс Basket
@@ -140,7 +144,7 @@ render(data: IModalData): HTMLElement - вовзращает корневой э
 
 Методы класса:
 
-displayerrors() - управляет отображением текста ошибок
+displayerrors() - управляет отображением текста ошибок\
 setvalidation() - меняет разметку кнопок и других элементов в зависимости от валидации формы
 
 ### Класс Success 
