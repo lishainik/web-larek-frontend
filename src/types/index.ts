@@ -9,18 +9,19 @@ export interface IShopItem {
 }
 
 export interface IOrderForm {
-    payment: 'online'| 'onDelivery';
-    deliveryAdress: string;
-    mail: string;
+    payment: string;
+    address: string;
+    email: string;
     phone: string;
 
 }
 
-// export interface ICatalog {
-//     items: IShopItem[];
-//     setItems(items: IShopItem[]):void;
-//     getItem(id: string): IShopItem;
-// }
+export interface IOrderResult {
+    id: string;
+    total: number;
+}
 
-export type TBasketModal = Pick<IShopItem, 'title' | 'price'>
-export type TOrderModal = Pick<IOrderForm, 'payment' | 'deliveryAdress'>
+export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+
+// export type TBasketModal = Pick<IShopItem, 'title' | 'price'>
+export type TOrderModal = Pick<IOrderForm, 'payment' | 'address'>
