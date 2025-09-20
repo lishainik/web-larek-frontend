@@ -61,6 +61,7 @@ yarn build
 
 setItems(items: IShopItem[]):void; - сохрание массива товара в модели после получения из api\
 getItem(id: string): IShopItem; - получение массива товаров каталога
+ getItems(): IShopItem[] - получение массива товаров содержащихся в каталоге
 
 ### Класс BasketModel - массив товаров в корзине
 
@@ -71,23 +72,56 @@ getItem(id: string): IShopItem; - получение массива товаро
 add (id: string): void; - добавление товара в корзину\
 remove (id: string): void; - удаление товара из корзины\
 clearBasket(): void - очищает корзину\
- getTotal(): void - высчитывает стоимость товаров в корзине
+calculateTotal(): number - высчитывает стоимость товаров в корзине
+ getItems(): Map<string, number> - возврииащает Map содержащий id предметов в корзине
 
-### Класс OrderForm
+### Класс OrderModel
 
 Отвечает за валидацию данных введенных в форму, хранение данных заказа
 
 Поля:
 
-payment: 'online'| 'onDelivery' - выбранный способ оплаты\
-deliveryAdress: - адрес доставки\
-mail: string - почта\
+payment: string - выбранный способ оплаты\
+address: - адрес доставки\
+email: string - почта\
 phone: string - телефон\
-valid: boolean - определяет валидность поля\
-errors: string[] - массив текста для ошибок
+formErrors: string[] - массив текста для ошибок
+events: IEvents; - евент эмиттер
+
+Методы:
+
+  setOrderField(field: keyof IOrderForm, value: string) - записывает в модель данные введенные пользователем
+   validateOrder() валидирует заказа
+     clearOrder() - очищает данные в заказе после его отправки на сервер
+
+### Класс ShopAPI : IShopAPI
+
+Поля класса включают в сеья данные необходимые для формирования запросов к серверу
+
+Методы:
+
+    getItems: () => Promise<IShopItem[]> - отпарвляет GET запрос на получение данных о товарах
+    getItem: (id: string) => Promise<IShopItem> - отправляет запрос на получение данных конкретного предмета по его ID
+    placeOrder(basket: Array<string>, order: OrderModel, total: number): Promise<IOrderResult> - отправляет POST запрос с данными заказа и предметами в корзине
+
+
 
 
 ## Компоненты Представления
+
+### Класс Form : IformState
+
+Собирает данные ввекденные в формы и создает необходимые ивенты, обновляет разметку форм
+
+Поля:
+
+_submit: HTMLButtonElement; - элемент разметки ошибки 
+_errors: HTMLElement; - элемент разметки кнопки отправления формы
+
+Методы:
+onInputChange(field: keyof T, value: string) - при введении данных в элемент формы эмитит соответсвующее событие
+сеттер valid разблокирует элементы кнопок при успешной валидации 
+сеттер errors ответсвененн за отображения текста ошибок валидации
 
 ### Класс Page
 
@@ -101,20 +135,9 @@ _wrapper: HTMLElement - "обертка" страницы\
 _basket: HTMLElement - кнопка корзины
 
 Методы класса:
-
-### Класс Component
-
-Отвечает за базовый функционал элементов разметки: изменение текстовых и иных элементов разметки
-
-Поля класса:
-
-Методы класса:
-
-setDisabled(element: HTMLElement, state: boolean) - отключение эелемента разметки\
-_setText(element: HTMLElement, value: unknown) - изменение текстового содержания элемента\
-toggleClass(element: HTMLElement, className: string, force?: boolean)\
-_setImage(element: HTMLImageElement, src: string, alt?: string) - добавление/удаление класса
-
+set locked : блокирует прокрутку страницы
+set counter : управление счетчиком товаров в крозине
+set catalog: наполнение каталога товаров
 
 ### Класс Modal
 
@@ -122,53 +145,100 @@ _setImage(element: HTMLImageElement, src: string, alt?: string) - добавле
 
 Поля класса: 
 
-HTML элемент кнопки закрытия окна и контейнер с разметкой внутри модального окна
+  protected _closeButton: HTMLButtonElement; - кнопка закрытия модального окна
+    protected _content: HTMLElement; - контент модального окна, меняется в зависимости от того какое модальное окно нужно отобразить
 
 Методы класса:
 
+set content: добавляет в основной контейнер модального окна нужную разметку в зависмости от задачи модального окна
 open() - открывает модальное окно\
 close() - закрывает модальное окно\
 render(data: IModalData): HTMLElement - вовзращает корневой элемент при изменении
 
-### Класс Basket
+### Класс BasketView
 
 Отображение элементов корзины в соответсвующем модальном окне списка покупок и суммы покупок. Наследует Component и его методы
 
-Поля класса: элементы разметки окна корзины
+Поля
 
-### Класс Form
+total: number - разметка суммы товаров в корзине
+ list: HTMLElement[] - лист товаров в корзине
+buttonDisabled: boolean - состояние кнопки оформления заказа
 
-Отображение элементов форма оформление товаров в соответсвующем модальном окне. Наследует Component  и его методы
+Методы:
 
-Поля класса: элементы разметки окна формы оформления заказа
-
-Методы класса:
-
-displayerrors() - управляет отображением текста ошибок\
-setvalidation() - меняет разметку кнопок и других элементов в зависимости от валидации формы
+ceттеры total и list отвечают за наполнение желемента суммы и листа покупок в корзине
+  set buttonDisabled (value: boolean) - отвечает за состояние кнопки оформления заказа
 
 ### Класс Success 
 
 Отображение разметки и суммы списания в окне успешного оформления товаров. Наследует Component  и его методы
 
-Поля класса: элементы разметки окна успешного заказа
+Поля класса: 
+total: number; - счетчик суммы заказа
+
+Методы:
+
+сеттер total 
 
 
 ### Класс Card
 
 Отображение разметки карточки товара на странице  и его методы
 
-Поля класса: элементы разметки карточки
+Поля класса: 
+ protected _cardTitle: HTMLElement; - название карточки
+    protected _cardButton: HTMLButtonElement; эелемент кнопки заказа вызывающее модальное окно с товаром
+    protected _cardImage: HTMLImageElement; - картинка товара
+    protected _cardPrice: HTMLElement; - элемент стоимсоти товара
+    protected _cardCategory: HTMLElement; - категория товара
+    protected _id: string; - id товара
+
+Методы:
+
+cеттеры соотвествующих элементов разметки 
 
 
 
-### Класс ProductDetail
+### Класс Preview
 
 отображение разметки описания продукта в модальном окне  и его методы
 
-Поля класса: элементы окна товара
+Поля класса: 
+     protected _previewTitle: HTMLElement;
+    protected _previewAddButton: HTMLButtonElement;
+    protected _previewImage: HTMLImageElement;
+    protected _previewPrice: HTMLElement;
+    protected _previewCategory: HTMLElement;
+    protected _previewDescription: HTMLElement;
+    protected _id: string;
 
+    Методы:
 
+    cеттеры соотвествующих элементов разметки 
+    buttonState(value: boolean): void  - переключатель состояния кнопки в зависимости от того находится ли товар в корзине
+
+### Класс OrderView
+
+отображение формы заполнения адреса и выбора метода оплаты наследует Form
+
+Поля:
+   protected _cashButton: HTMLButtonElement - элемент разметки кнопки 
+    protected _cardButton: HTMLButtonElement - - элемент разметки кнопки 
+
+Методы:
+
+сеттеры полей
+
+ setActiveButton(value:string) : void  - опеределяет состояние кнопок выбора метода оплаты
+    
+
+### Класс Conctact view
+
+отображение формы заполнения контактов наследует Form
+
+методы:
+сеттеры полей
 
 ## Компоненты Презентера
 
@@ -190,9 +260,9 @@ interface IShopItem {
 ### интерфейс заказа
 ```
 interface IOrderForm {
-    payment: 'online'| 'onDelivery'; //метод олплаты либо онлайн либо при получении
-    deliveryAdress: string; // адрес доставки
-    mail: string; // почта
+    payment: string; //метод олплаты либо онлайн либо при получении
+    address: string; // адрес доставки
+    email: string; // почта
     phone: string; // телефон
 
 }
