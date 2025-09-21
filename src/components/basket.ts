@@ -1,4 +1,4 @@
-import { EventEmitter } from './base/events';
+import { EventEmitter, IEvents } from './base/events';
 import { IShopItem } from '../types';
 
  
@@ -15,17 +15,21 @@ export class BasketModel implements IBasketModel {
 
     items: Map<string, number> = new Map()
      
+    constructor(protected events: IEvents) {
 
+    }
 
    
     add(id: string, price:number): void {
         if(!this.items.has(id)) this.items.set(id,price)
+            this.events.emit('basket:change', {state: true})
             // this.items.set(id, this.items.get(id)! + 1)
     }
 
     remove(id: string): void {
         if (!this.items.has(id)) return;
             else {this.items.delete(id)}
+                this.events.emit('basket:change', {state: false})
     }
 
     calculateTotal(): number {

@@ -83,12 +83,14 @@ export class Preview extends Component<IShopItem> {
         if (value === true) {
                this.setText(this._previewAddButton, 'В корзину')
                this._previewAddButton.addEventListener('click', () => {
-            this.events.emit('itemcard:add', {id: this._id})
+            this.events.emit('basket:add', {id: this._id})
+            return this.container
         })
         } else {
                this.setText(this._previewAddButton, 'Удалить из корзины')
                this._previewAddButton.addEventListener('click', () => {
-            this.events.emit('itemcard:remove', {id: this._id})
+            this.events.emit('basket:remove', {id: this._id})
+             return this.container
         })
         }
     }
