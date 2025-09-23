@@ -72,43 +72,14 @@ events.on('card:open', ({ id }: { id: string }) => {
 
 events.on('basket:open', () => {
 
-    const items: IShopItem[] = []
-
-    basket.items.forEach((value, key) => {
-        const item = catalog.getItem(key)
-        items.push(item)
-    })
-    if (items.length === 0) {
-
-        modal.render({
-
-            content: basketView.render({
-                buttonDisabled: true,
-                list: [],
-                total: 0,
-            })
-        })
-
-    } else {
-        const list = items.map(item => new BasketItemTemplate(cloneTemplate(cardBasketTemplate), events, item.id).render({
-            title: item.title,
-            price: item.price,
-            index: items.indexOf(item) + 1
-        }))
+ 
 
 
         modal.render({
-            content: basketView.render({
-                list: list,
-                total: basket.calculateTotal(),
-                buttonDisabled: false,
-            })
+            content: basketView.render()
         })
     }
-
-
-
-})
+)
 
 events.on('basket:add', ({ id }: { id: string }) => {
     const item = catalog.getItem(id)
@@ -129,12 +100,14 @@ events.on('basket:change', ({ state }: { state: boolean }) => {
     })
     if (state === true) {
         cardPreview.buttonState(false)
-
+        
 
 
     } else if (state === false) {
         cardPreview.buttonState(true)
-        const items: IShopItem[] = []
+       
+    }
+     const items: IShopItem[] = []
 
         basket.items.forEach((value, key) => {
             const item = catalog.getItem(key)
@@ -165,7 +138,6 @@ events.on('basket:change', ({ state }: { state: boolean }) => {
             })
 
         }
-    }
 
 
 
