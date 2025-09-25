@@ -109,7 +109,9 @@ events.on('basket:change', ({ state }: { state: boolean }) => {
     }
      const items: IShopItem[] = []
 
-        basket.items.forEach((value, key) => {
+     const basketItems = basket.getItems()
+
+        basketItems.forEach((value, key) => {
             const item = catalog.getItem(key)
             items.push(item)
         })
@@ -168,21 +170,7 @@ events.on('items:changed', () => {
 
 
 
-events.on('itemcard:remove', ({ id }: { id: string }) => {
-    basket.remove(id)
-    cardPreview.buttonState(true)
-    modal.render(
-        {
-            content: cardPreview.render({
 
-            })
-        }
-    )
-
-    page.render({
-        counter: basket.items.size
-    })
-})
 
 events.on('basket:submit', () => {
     modal.close()
